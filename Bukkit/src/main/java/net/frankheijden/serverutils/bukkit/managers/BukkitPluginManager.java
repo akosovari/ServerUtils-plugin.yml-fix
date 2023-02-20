@@ -2,6 +2,9 @@ package net.frankheijden.serverutils.bukkit.managers;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,8 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.stream.Collectors;
 import net.frankheijden.serverutils.bukkit.entities.BukkitPluginDescription;
 import net.frankheijden.serverutils.bukkit.events.BukkitPluginDisableEvent;
@@ -41,9 +44,11 @@ import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.plugin.InvalidDescriptionException;
 import org.bukkit.plugin.InvalidPluginException;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.UnknownDependencyException;
+import org.yaml.snakeyaml.error.YAMLException;
 
 public class BukkitPluginManager extends AbstractPluginManager<Plugin, BukkitPluginDescription> {
 
@@ -348,45 +353,12 @@ public class BukkitPluginManager extends AbstractPluginManager<Plugin, BukkitPlu
         return knownCommands.get(command);
     }
 
-    /**
-     * Retrieves all file associations, i.e. all plugin loaders.
-     * @return A map with all pluginloaders.
-     */
-    public static Map<Pattern, PluginLoader> getFileAssociations() {
-        try {
-            return RSimplePluginManager.getFileAssociations(Bukkit.getPluginManager());
-        } catch (IllegalAccessException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * Retrieves the PluginLoader for the input file.
-     * @param file The file.
-     * @return The appropiate PluginLoader.
-     */
-    public static Optional<PluginLoader> getPluginLoader(File file) {
-        Map<Pattern, PluginLoader> fileAssociations = getFileAssociations();
-        if (fileAssociations != null) {
-            for (Map.Entry<Pattern, PluginLoader> entry : fileAssociations.entrySet()) {
-                Matcher match = entry.getKey().matcher(file.getName());
-                if (match.find()) {
-                    return Optional.ofNullable(entry.getValue());
-                }
-            }
-        }
-        return Optional.empty();
-    }
-
     @Override
     public Optional<BukkitPluginDescription> getPluginDescription(File file) throws InvalidPluginDescriptionException {
         if (!file.exists()) return Optional.empty();
 
-        Optional<PluginLoader> loader = getPluginLoader(file);
-        if (!loader.isPresent()) throw new InvalidPluginDescriptionException("Plugin loader is not present!");
         try {
-            return Optional.of(new BukkitPluginDescription(loader.get().getPluginDescription(file), file));
+            return Optional.of(new BukkitPluginDescription(loadDescriptionFromJar(file), file));
         } catch (InvalidDescriptionException ex) {
             throw new InvalidPluginDescriptionException(ex);
         }
@@ -427,5 +399,39 @@ public class BukkitPluginManager extends AbstractPluginManager<Plugin, BukkitPlu
     @Override
     public String getPluginId(Plugin plugin) {
         return plugin.getName();
+    }
+
+    // Copied from JavaPluginLoader#getPluginDescription
+    private PluginDescriptionFile loadDescriptionFromJar(File file) throws InvalidDescriptionException {
+        JarFile jar = null;
+        InputStream stream = null;
+
+        try {
+            jar = new JarFile(file);
+            JarEntry entry = jar.getJarEntry("plugin.yml");
+
+            if (entry == null) {
+                throw new InvalidDescriptionException(new FileNotFoundException("Jar does not contain plugin.yml"));
+            }
+
+            stream = jar.getInputStream(entry);
+
+            return new PluginDescriptionFile(stream);
+        } catch (IOException | YAMLException ex) {
+            throw new InvalidDescriptionException(ex);
+        } finally {
+            if (jar != null) {
+                try {
+                    jar.close();
+                } catch (IOException ignored) {
+                }
+            }
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException ignored) {
+                }
+            }
+        }
     }
 }
