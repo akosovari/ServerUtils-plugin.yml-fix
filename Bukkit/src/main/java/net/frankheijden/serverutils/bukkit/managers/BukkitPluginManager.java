@@ -91,8 +91,19 @@ public class BukkitPluginManager extends AbstractPluginManager<Plugin, BukkitPlu
             }
 
             if (plugin == null) return pluginResults.addResult(pluginId, Result.INVALID_PLUGIN);
+
+            if (RSimplePluginManager.MANAGED_BY_PAPER_INSTANCE_MANAGER) {
+                Bukkit.getPluginManager().callEvent(new BukkitPluginLoadEvent(plugin, PluginEvent.Stage.POST));
+                pluginResults.addResult(pluginId, plugin);
+                continue;
+            }
+
             plugins.add(plugin);
             Bukkit.getPluginManager().callEvent(new BukkitPluginLoadEvent(plugin, PluginEvent.Stage.PRE));
+        }
+
+        if (RSimplePluginManager.MANAGED_BY_PAPER_INSTANCE_MANAGER) {
+            return pluginResults;
         }
 
         for (Plugin plugin : plugins) {

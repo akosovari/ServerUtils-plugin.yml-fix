@@ -16,6 +16,8 @@ public class RSimplePluginManager {
     private static final Field PLUGINS_FIELD;
     private static final Field LOOKUP_NAMES_FIELD;
 
+    public static final boolean MANAGED_BY_PAPER_INSTANCE_MANAGER;
+
     static {
         Object paperInstanceManager;
         Field pluginsField;
@@ -39,6 +41,7 @@ public class RSimplePluginManager {
         PAPER_INSTANCE_MANAGER = paperInstanceManager;
         PLUGINS_FIELD = pluginsField;
         LOOKUP_NAMES_FIELD = lookupNamesField;
+        MANAGED_BY_PAPER_INSTANCE_MANAGER = paperInstanceManager != null;
     }
 
     public static MinecraftReflection getReflection() {
