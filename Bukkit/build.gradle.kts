@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("net.minecrell.plugin-yml.bukkit") version "0.5.0"
+    //id("net.minecrell.plugin-yml.bukkit") version "0.5.0"
 }
 
 group = rootProject.group
@@ -26,7 +26,7 @@ dependencies {
     }
     implementation("org.bstats:bstats-bukkit:${VersionConstants.bstatsVersion}")
     implementation(project(":Common"))
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT") {
+    compileOnly("dev.folia:folia-api:1.19.4-R0.1-SNAPSHOT") {
         exclude("net.kyori", "*")
     }
 }
@@ -35,6 +35,7 @@ tasks.withType<ShadowJar> {
     relocate("org.bstats", "${dependencyDir}.bstats")
 }
 
+/*
 bukkit {
     name = "ServerUtils"
     main = "net.frankheijden.serverutils.bukkit.ServerUtils"
@@ -44,3 +45,4 @@ bukkit {
     softDepend = listOf("ServerUtilsUpdater")
     authors = listOf("FrankHeijden")
 }
+*/

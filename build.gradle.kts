@@ -11,8 +11,8 @@ val dependencyDir = "${group}.dependencies"
 version = "3.5.5-SNAPSHOT"
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 subprojects {
@@ -22,8 +22,8 @@ subprojects {
     apply(plugin = "com.github.johnrengelman.shadow")
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     repositories {
@@ -56,6 +56,7 @@ subprojects {
         compileJava {
             options.encoding = Charsets.UTF_8.name()
             options.isDeprecation = true
+            options.release.set(17)
         }
 
         javadoc {
