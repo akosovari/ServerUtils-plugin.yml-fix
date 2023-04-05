@@ -75,7 +75,7 @@ public abstract class ServerUtilsPlugin<P, T, C extends ServerUtilsAudience<S>, 
     public abstract File getDataFolder();
 
     public Collection<Command<C>> getCommands() {
-        return commandManager.getCommands();
+        return commandManager.commands();
     }
 
     public void createDataFolderIfNotExists() {

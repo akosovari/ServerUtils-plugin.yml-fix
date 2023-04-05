@@ -126,7 +126,7 @@ public class BukkitCommandServerUtils extends CommandServerUtils<BukkitPlugin, P
         if (handler == null) {
             messages.get(BukkitMessageKey.RELOADCONFIG_NOT_EXISTS).sendTo(
                     sender,
-                    Template.of("config", config)
+                    Template.template("config", config)
             );
             return;
         }
@@ -138,7 +138,7 @@ public class BukkitCommandServerUtils extends CommandServerUtils<BukkitPlugin, P
             if (MinecraftReflectionVersion.MINOR > max) {
                 messages.get(BukkitMessageKey.RELOADCONFIG_NOT_SUPPORTED).sendTo(
                         sender,
-                        Template.of("config", config)
+                        Template.template("config", config)
                 );
                 return;
             }
@@ -153,7 +153,7 @@ public class BukkitCommandServerUtils extends CommandServerUtils<BukkitPlugin, P
             BukkitMessageKey key = filter.hasWarnings()
                     ? BukkitMessageKey.RELOADCONFIG_WARNINGS
                     : BukkitMessageKey.RELOADCONFIG_SUCCESS;
-            plugin.getMessagesResource().get(key).sendTo(sender, Template.of("config", config));
+            plugin.getMessagesResource().get(key).sendTo(sender, Template.template("config", config));
         } catch (Exception ex) {
             filter.stop(Bukkit.getLogger());
 

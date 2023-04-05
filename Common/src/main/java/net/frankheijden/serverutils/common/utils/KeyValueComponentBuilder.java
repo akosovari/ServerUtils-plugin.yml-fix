@@ -66,21 +66,21 @@ public class KeyValueComponentBuilder {
         private final Template key;
 
         private KeyValuePair(String key) {
-            this.key = Template.of(keyPlaceholder, key);
+            this.key = Template.template(keyPlaceholder, key);
         }
 
         private KeyValuePair(Component key) {
-            this.key = Template.of(keyPlaceholder, key);
+            this.key = Template.template(keyPlaceholder, key);
         }
 
         public KeyValueComponentBuilder value(String value) {
             if (value == null) return KeyValueComponentBuilder.this;
-            return add(key, Template.of(valuePlaceholder, value));
+            return add(key, Template.template(valuePlaceholder, value));
         }
 
         public KeyValueComponentBuilder value(Component value) {
             if (value == null) return KeyValueComponentBuilder.this;
-            return add(key, Template.of(valuePlaceholder, value));
+            return add(key, Template.template(valuePlaceholder, value));
         }
     }
 }

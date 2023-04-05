@@ -49,7 +49,7 @@ public abstract class CommandPlugins<U extends ServerUtilsPlugin<P, ?, C, ?, D>,
         sender.sendMessage(messages.get(MessageKey.PLUGINS_HEADER).toComponent());
         TextComponent.Builder builder = Component.text();
         builder.append(messages.get(MessageKey.PLUGINS_PREFIX).toComponent(
-                Template.of("count", String.valueOf(filteredPlugins.size()))
+                Template.template("count", String.valueOf(filteredPlugins.size()))
         ));
         builder.append(ListComponentBuilder.create(filteredPlugins)
                 .separator(messages.get(MessageKey.PLUGINS_SEPARATOR).toComponent())
@@ -62,11 +62,11 @@ public abstract class CommandPlugins<U extends ServerUtilsPlugin<P, ?, C, ?, D>,
                             ? MessageKey.PLUGINS_FORMAT
                             : MessageKey.PLUGINS_FORMAT_DISABLED;
                     formatBuilder.append(messages.get(formatKey).toComponent(
-                            Template.of("plugin", description.getName())
+                            Template.template("plugin", description.getName())
                     ));
                     if (hasVersionFlag) {
                         formatBuilder.append(messages.get(MessageKey.PLUGINS_VERSION).toComponent(
-                                Template.of("version", description.getVersion())
+                                Template.template("version", description.getVersion())
                         ));
                     }
 

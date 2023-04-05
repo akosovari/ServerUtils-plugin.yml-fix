@@ -44,7 +44,7 @@ public class VelocityPlugin extends ServerUtilsPlugin<PluginContainer, Scheduled
         VelocityCommandManager<VelocityAudience> commandManager = new VelocityCommandManager<>(
                 plugin.getPluginContainer(),
                 plugin.getProxy(),
-                AsynchronousCommandExecutionCoordinator.<VelocityAudience>newBuilder().build(),
+                AsynchronousCommandExecutionCoordinator.<VelocityAudience>builder().build(),
                 chatProvider::get,
                 VelocityAudience::getSource
         );

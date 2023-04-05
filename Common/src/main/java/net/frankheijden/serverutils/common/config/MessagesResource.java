@@ -8,6 +8,7 @@ import net.frankheijden.serverutils.common.entities.ServerUtilsPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.Template;
+import net.kyori.adventure.text.minimessage.template.TemplateResolver;
 
 public class MessagesResource extends ServerUtilsResource {
 
@@ -22,7 +23,7 @@ public class MessagesResource extends ServerUtilsResource {
     public MessagesResource(ServerUtilsPlugin<?, ?, ?, ?, ?> plugin) {
         super(plugin, MESSAGES_RESOURCE);
         this.messageMap = new HashMap<>();
-        this.miniMessage = MiniMessage.get();
+        this.miniMessage = MiniMessage.miniMessage();
     }
 
     public Message get(String path) {
@@ -68,14 +69,14 @@ public class MessagesResource extends ServerUtilsResource {
          * Creates a {@link Component}.
          */
         public Component toComponent(Template... templates) {
-            return this.component == null ? miniMessage.parse(messageString, templates) : this.component;
+            return this.component == null ? miniMessage.deserialize(messageString, TemplateResolver.templates(templates)) : this.component;
         }
 
         /**
          * Creates a {@link Component}.
          */
         public Component toComponent(String... placeholders) {
-            return this.component == null ? miniMessage.parse(messageString, placeholders) : this.component;
+            return this.component == null ? miniMessage.deserialize(messageString, TemplateResolver.resolving((Object[]) placeholders)) : this.component;
         }
 
         public void sendTo(ServerUtilsAudience<?> serverAudience, Template... placeholders) {

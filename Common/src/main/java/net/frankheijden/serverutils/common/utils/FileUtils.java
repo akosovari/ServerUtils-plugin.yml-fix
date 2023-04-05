@@ -23,7 +23,7 @@ public class FileUtils {
     public static JsonElement parseJson(InputStream in) throws IOException {
         if (in == null) return null;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-            return new JsonParser().parse(reader);
+            return JsonParser.parseReader(reader);
         }
     }
 

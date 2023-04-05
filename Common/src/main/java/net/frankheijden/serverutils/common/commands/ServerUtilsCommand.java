@@ -131,7 +131,7 @@ public abstract class ServerUtilsCommand<U extends ServerUtilsPlugin<?, ?, C, ?,
      * Creates a flag from a CommandElement.
      */
     public CommandFlag<Void> createFlag(CommandElement flagElement) {
-        return CommandFlag.newBuilder(flagElement.getMain())
+        return CommandFlag.builder(flagElement.getMain())
                 .withAliases(flagElement.getAliases())
                 .withPermission(flagElement.getPermission())
                 .withDescription(flagElement.getDescription())
