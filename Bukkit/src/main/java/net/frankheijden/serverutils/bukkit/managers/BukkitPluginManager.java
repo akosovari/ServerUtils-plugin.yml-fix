@@ -422,6 +422,10 @@ public class BukkitPluginManager extends AbstractPluginManager<Plugin, BukkitPlu
             JarEntry entry = jar.getJarEntry("plugin.yml");
 
             if (entry == null) {
+                entry = jar.getJarEntry("paper-plugin.yml");
+            }
+
+            if (entry == null) {
                 throw new InvalidDescriptionException(new FileNotFoundException("Jar does not contain plugin.yml"));
             }
 
